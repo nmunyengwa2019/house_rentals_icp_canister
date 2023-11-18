@@ -65,7 +65,7 @@ URLs:
   Backend canister via Candid interface:
     message_board: http://127.0.0.1:4943/?canisterId=avqkn-guaaa-aaaaa-qaaea-cai&id=by6od-j4aaa-aaaaa-qaadq-cai
 
-```bash
+```
 
 ## Interact with the canister
 

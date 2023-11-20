@@ -12,9 +12,6 @@ This example project will help you to deploy your first canister (application) t
 After you have installed the required tools, you can move on to the next step.
 
 ## Clone the repository
-
-```bash
-
 Clone this repository and navigate to the `message_board` directory:
 
 ```bash

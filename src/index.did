@@ -1,6 +1,9 @@
 service: () -> {
-    addMessage: (record {attachmentURL:text; title:text; body:text}) -> (record {id:text; attachmentURL:text; title:text; body:text; createdAt:nat64; updatedAt:opt nat64});
-    deleteMessage: (text) -> (opt record {id:text; attachmentURL:text; title:text; body:text; createdAt:nat64; updatedAt:opt nat64});
-    getMessage: (text) -> (opt record {id:text; attachmentURL:text; title:text; body:text; createdAt:nat64; updatedAt:opt nat64}) query;
-    getMessages: () -> (vec record {id:text; attachmentURL:text; title:text; body:text; createdAt:nat64; updatedAt:opt nat64}) query;
+    addHouse: (record {ensuit:bool; owner_id:text; address:text; isBooked:bool; image:vec nat8; bathrooms:nat64; rooms:nat64}) -> (record {id:text; ensuit:bool; owner_id:text; address:text; isBooked:bool; rating:text; image:vec nat8; bathrooms:nat64; rooms:nat64});
+    deleteHouse: (text) -> (opt record {id:text; ensuit:bool; owner_id:text; address:text; isBooked:bool; rating:text; image:vec nat8; bathrooms:nat64; rooms:nat64});
+    filterByRooms: (nat64, nat64) -> (vec record {id:text; ensuit:bool; owner_id:text; address:text; isBooked:bool; rating:text; image:vec nat8; bathrooms:nat64; rooms:nat64}) query;
+    getBookedHouses: () -> (vec record {id:text; ensuit:bool; owner_id:text; address:text; isBooked:bool; rating:text; image:vec nat8; bathrooms:nat64; rooms:nat64}) query;
+    getHouse: (text) -> (opt record {id:text; ensuit:bool; owner_id:text; address:text; isBooked:bool; rating:text; image:vec nat8; bathrooms:nat64; rooms:nat64}) query;
+    getHouses: () -> (vec record {id:text; ensuit:bool; owner_id:text; address:text; isBooked:bool; rating:text; image:vec nat8; bathrooms:nat64; rooms:nat64}) query;
+    getUnBookedHouses: () -> (vec record {id:text; ensuit:bool; owner_id:text; address:text; isBooked:bool; rating:text; image:vec nat8; bathrooms:nat64; rooms:nat64}) query;
 }

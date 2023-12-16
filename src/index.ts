@@ -5,14 +5,71 @@ import {
     StableBTreeMap,
     Vec,
     nat64,
-    ic,
     Opt,
-    None,
     text,
-    Canister,
-    Principal,
+    Canister, 
+    bool,   
+    blob
   } from "azle";
+
   import { v4 as uuidv4 } from "uuid";
+
+
+  
+  const User = Record({
+    id:text,
+    name:text,
+    houses:nat64,
+    contact:text,
+    verified:bool
+  });
+
+  const UserPayload = Record({
+    name:text,
+    houses:nat64,
+    contact:text,
+    verified:bool
+  });
+  
+  const House = Record({
+    id: text,
+    owner_id:text,
+    image:blob,
+    isBooked:bool,
+    rooms:nat64,
+    bathrooms:nat64,
+    ensuit:bool,
+    address:text,
+    rating:text
+  });
+
+  const HousePayload = Record({
+    owner_id:text,
+    
+    image:blob,
+    isBooked:bool,
+    rooms:nat64,
+    bathrooms:nat64,
+    ensuit:bool,
+    address:text,
+  });
+
+  const numOfroomsPayload = Record({
+    minimumRooms:nat64,
+    maximumRooms:nat64
+  });
+
+
+
+  type User = typeof User;
+  type House = typeof House;
+  type HousePayload = typeof HousePayload;
+  type UserPayload = typeof UserPayload;
+
+  let userStorage = StableBTreeMap<text,User>(text,User,0);
+  let houseStorage = StableBTreeMap<text,House>(text,House,0);
+
+
   
   
   const Message = Record({
@@ -33,58 +90,69 @@ import {
   });
   type MessagePayload = typeof MessagePayload;
   
-  let messageStorage = StableBTreeMap<text, Message>(text, Message, 0);
+  //let messageStorage = StableBTreeMap<text, Message>(text, Message, 0);
   
   export default Canister({
-    // $query;
-    // export function getMessages(): Result<Vec<Message>, string> {
-    //     return Result.Ok(messageStorage.values());
-    // }
-  
-    getMessages: query([], Vec(Message), () => {
-      return messageStorage.values();
-    }),
-  
-    // $query;
-    // export function getMessage(id: string): Result<Message, string> {
-    //     return match(messageStorage.get(id), {
-    //         Some: (message) => Result.Ok<Message, string>(message),
-    //         None: () => Result.Err<Message, string>(`a message with id=${id} not found`)
-    //     });
-    // }
-  
-    getMessage: query([text], Opt(Message), (id) => {
-      return messageStorage.get(id);
-    }),
-  
-    // $update;
-    // export function addMessage(payload: MessagePayload): Result<Message, string> {
-    //     const message: Message = { id: uuidv4(), createdAt: ic.time(), updatedAt: Opt.None, ...payload };
-    //     messageStorage.insert(message.id, message);
-    //     return Result.Ok(message);
-    // }
-    
-    addMessage: update([MessagePayload], Message, (payload) => {
-      const message: Message = {
+
+    addHouse: update([HousePayload],House,(payload)=>{
+      const house: House={
         id: uuidv4(),
-        createdAt: ic.time(),
-        updatedAt: None,
         ...payload,
-      };
-      messageStorage.insert(message.id, message);
-      return message;
+        rating:"*"
+      }
+      houseStorage.insert(house.id,house);
+      return house;
     }),
+    
+    getHouse: query([text],Opt(House),(id)=>{
+      return houseStorage.get(id);
+    }),
+
+    getHouses: query([],Vec(House),()=>{
+
+      return houseStorage.values();
+    }),
+
+    getUnBookedHouses: query([],Vec(House),()=>{
+      const allHouses: House[] = houseStorage.values();
+      const unBookedHouses: House[] = [];
+      for (const house of allHouses) {
+        if (house.isBooked === false) {
+          unBookedHouses.push(house);
+        }
+      }
+      return unBookedHouses;
+    }),
+
+    getBookedHouses: query([],Vec(House),()=>{
+      const allHouses: House[] = houseStorage.values();
+      const bookedHouses: House[] = [];
+      for (const house of allHouses) {
+        if (house.isBooked === true) {
+          bookedHouses.push(house);
+        }
+      }
+      return bookedHouses;
+    }),
+
+    filterByRooms:query([nat64,nat64],Vec(House),(minimumRooms,
+      maximumRooms)=>{
+      const allHouses: House[] = houseStorage.values();
+      const bookedHouses: House[] = [];
+      for (const house of allHouses) {
+        if (house.isBooked === true && house.rooms>=minimumRooms && house.rooms<=maximumRooms) {
+          bookedHouses.push(house);
+        }
+      }
+
+      return bookedHouses;
+
+    }),
+
+
   
-    // $update;
-    // export function deleteMessage(id: string): Result<Message, string> {
-    //     return match(messageStorage.remove(id), {
-    //         Some: (deletedMessage) => Result.Ok<Message, string>(deletedMessage),
-    //         None: () => Result.Err<Message, string>(`couldn't delete a message with id=${id}. message not found.`)
-    //     });
-    // }
-  
-    deleteMessage: update([text], Opt(Message), (id) => {
-      return messageStorage.remove(id);
+    deleteHouse: update([text], Opt(House), (id) => {
+      return houseStorage.remove(id);
     }),
   });
   

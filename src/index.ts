@@ -104,9 +104,23 @@ import {
       return house;
     }),
     
-    getHouse: query([text],Opt(House),(id)=>{
-      return houseStorage.get(id);
-    }),
+    getHouse: query([text], Opt(House), (id) => {
+  // Validate input data
+  if (!id) {
+    // Handle invalid input
+    throw new Error("Invalid house id");
+  }
+
+  const house = houseStorage.get(id);
+
+  // Handle house not found
+  if (!house) {
+    throw new Error(`House with id ${id} not found`);
+  }
+
+  return house;
+}),
+
 
     getHouses: query([],Vec(House),()=>{
 
@@ -135,25 +149,45 @@ import {
       return bookedHouses;
     }),
 
-    filterByRooms:query([nat64,nat64],Vec(House),(minimumRooms,
-      maximumRooms)=>{
-      const allHouses: House[] = houseStorage.values();
-      const bookedHouses: House[] = [];
-      for (const house of allHouses) {
-        if (house.isBooked === true && house.rooms>=minimumRooms && house.rooms<=maximumRooms) {
-          bookedHouses.push(house);
-        }
-      }
+    filterByRooms: query([nat64, nat64], Vec(House), (minimumRooms, maximumRooms) => {
+  // Validate input data
+  if (minimumRooms < 0 || maximumRooms < 0 || minimumRooms > maximumRooms) {
+    // Handle invalid input
+    throw new Error("Invalid room range");
+  }
 
-      return bookedHouses;
+  const allHouses: House[] = houseStorage.values();
+  const bookedHouses: House[] = [];
 
-    }),
+  for (const house of allHouses) {
+    if (house.isBooked === true && house.rooms >= minimumRooms && house.rooms <= maximumRooms) {
+      bookedHouses.push(house);
+    }
+  }
+
+  return bookedHouses;
+}),
+
 
 
   
     deleteHouse: update([text], Opt(House), (id) => {
-      return houseStorage.remove(id);
-    }),
+  // Validate input data
+  if (!id) {
+    // Handle invalid input
+    throw new Error("Invalid house id");
+  }
+
+  const deletedHouse = houseStorage.remove(id);
+
+  // Handle house not found
+  if (!deletedHouse) {
+    throw new Error(`House with id ${id} not found`);
+  }
+
+  return deletedHouse;
+}),
+
   });
   
   // a workaround to make uuid package work with Azle

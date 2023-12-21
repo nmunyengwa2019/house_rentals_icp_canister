@@ -1,9 +1,9 @@
 service: () -> {
-    addHouse: (record {ensuit:bool; owner_id:text; address:text; isBooked:bool; image:vec nat8; bathrooms:nat64; rooms:nat64}) -> (record {id:text; ensuit:bool; owner_id:text; address:text; isBooked:bool; rating:text; image:vec nat8; bathrooms:nat64; rooms:nat64});
-    deleteHouse: (text) -> (opt record {id:text; ensuit:bool; owner_id:text; address:text; isBooked:bool; rating:text; image:vec nat8; bathrooms:nat64; rooms:nat64});
-    filterByRooms: (nat64, nat64) -> (vec record {id:text; ensuit:bool; owner_id:text; address:text; isBooked:bool; rating:text; image:vec nat8; bathrooms:nat64; rooms:nat64}) query;
-    getBookedHouses: () -> (vec record {id:text; ensuit:bool; owner_id:text; address:text; isBooked:bool; rating:text; image:vec nat8; bathrooms:nat64; rooms:nat64}) query;
-    getHouse: (text) -> (opt record {id:text; ensuit:bool; owner_id:text; address:text; isBooked:bool; rating:text; image:vec nat8; bathrooms:nat64; rooms:nat64}) query;
-    getHouses: () -> (vec record {id:text; ensuit:bool; owner_id:text; address:text; isBooked:bool; rating:text; image:vec nat8; bathrooms:nat64; rooms:nat64}) query;
-    getUnBookedHouses: () -> (vec record {id:text; ensuit:bool; owner_id:text; address:text; isBooked:bool; rating:text; image:vec nat8; bathrooms:nat64; rooms:nat64}) query;
+    addHouse: (record {ensuit:bool; address:text; isBooked:bool; image:vec nat8; bathrooms:nat16; rooms:nat16}) -> (variant {Ok:record {id:text; ensuit:bool; address:text; isBooked:bool; rating:text; image:vec nat8; bathrooms:nat16; owner_principal:principal; rooms:nat16}; Err:text});
+    deleteHouse: (text) -> (variant {Ok:record {id:text; ensuit:bool; address:text; isBooked:bool; rating:text; image:vec nat8; bathrooms:nat16; owner_principal:principal; rooms:nat16}; Err:text});
+    filterByRooms: (nat16, nat16) -> (variant {Ok:vec record {id:text; ensuit:bool; address:text; isBooked:bool; rating:text; image:vec nat8; bathrooms:nat16; owner_principal:principal; rooms:nat16}; Err:text}) query;
+    getBookedHouses: () -> (vec record {id:text; ensuit:bool; address:text; isBooked:bool; rating:text; image:vec nat8; bathrooms:nat16; owner_principal:principal; rooms:nat16}) query;
+    getHouse: (text) -> (variant {Ok:record {id:text; ensuit:bool; address:text; isBooked:bool; rating:text; image:vec nat8; bathrooms:nat16; owner_principal:principal; rooms:nat16}; Err:text}) query;
+    getHouses: () -> (vec record {id:text; ensuit:bool; address:text; isBooked:bool; rating:text; image:vec nat8; bathrooms:nat16; owner_principal:principal; rooms:nat16}) query;
+    getUnBookedHouses: () -> (vec record {id:text; ensuit:bool; address:text; isBooked:bool; rating:text; image:vec nat8; bathrooms:nat16; owner_principal:principal; rooms:nat16}) query;
 }

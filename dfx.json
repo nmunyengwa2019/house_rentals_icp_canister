@@ -1,11 +1,11 @@
 {
     "canisters": {
-        "message_board": {
+        "house_rentals": {
             "type": "custom",
             "main": "src/index.ts",
             "candid": "src/index.did",
-            "build": "npx azle message_board",
-            "wasm": ".azle/message_board/message_board.wasm",
+            "build": "npx azle house_rentals",
+            "wasm": ".azle/house_rentals/house_rentals.wasm",
             "gzip": true
         }
     }
